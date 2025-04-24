@@ -1,0 +1,82 @@
+<!-- Hazırlayan: @sirmehmettosun -->
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sunuculu PDF Sıkıştırıcı</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+      background: #f8f9fa;
+    }
+    .container {
+      background: #ffffff;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin: auto;
+      text-align: center;
+    }
+    input[type="file"] {
+      margin-bottom: 1rem;
+    }
+    button {
+      padding: 0.75rem 1.5rem;
+      background-color: #007bff;
+      border: none;
+      color: white;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    #status {
+      margin-top: 1rem;
+      font-weight: bold;
+      color: #28a745;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>PDF Sıkıştırıcı (Sunuculu)</h2>
+    <input type="file" id="pdfFile" accept="application/pdf" />
+    <button id="compressBtn">Sıkıştır</button>
+    <div id="status"></div>
+  </div>
+  <script>
+    document.getElementById('compressBtn').addEventListener('click', async () => {
+      const fileInput = document.getElementById('pdfFile');
+      const status = document.getElementById('status');
+      const file = fileInput.files[0];
+      if (!file) return alert("Lütfen bir PDF seçin");
+
+      const formData = new FormData();
+      formData.append("pdf", file);
+      status.textContent = "Yükleniyor ve sıkıştırılıyor...";
+
+      try {
+        const response = await fetch("/compress", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) throw new Error("Sunucu hatası");
+
+        const blob = await response.blob();
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `sikistirilmis_${file.name}`;
+        link.click();
+
+        status.textContent = "İndirme tamamlandı ✔";
+      } catch (err) {
+        console.error(err);
+        status.textContent = "Sıkıştırma başarısız ❌";
+      }
+    });
+  </script>
+</body>
+</html>
