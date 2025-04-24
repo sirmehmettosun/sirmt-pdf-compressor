@@ -1,0 +1,16 @@
+<!-- Hazırlayan: @sirmehmettosun -->
+{
+  "name": "pdf-compressor-server",
+  "version": "1.0.0",
+  "description": "PDF dosyalarını Ghostscript ile sıkıştıran Node.js uygulaması",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "@sirmehmettosun",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "multer": "^1.4.5"
+  }
+}
